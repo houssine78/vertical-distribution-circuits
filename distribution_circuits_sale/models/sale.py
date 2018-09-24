@@ -128,6 +128,12 @@ class Partner(models.Model):
             for invoice in open_invoices:
                 amount_total += invoice.residual
             
+            # draft invoices are not taken into account in the partner credit
+            draft_invoices =  invoice_obj.search([('partner_id','=',partner.id),('state','in',['draft'])])
+            
+            for invoice in draft_invoices:
+                amount_total += invoice.amount_total
+            
             # only not invoiced lines of orders are not taken into account in customer credit
             orders = order_obj.search([('partner_id','=',partner.id),('state','in',['sent','sale']),('invoice_status','!=','invoiced')])
             
