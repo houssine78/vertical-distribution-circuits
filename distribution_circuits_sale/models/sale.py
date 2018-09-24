@@ -121,6 +121,13 @@ class Partner(models.Model):
                 ])
 
             amount_total = 0
+            
+            # residuals of open invoices are not taken into account in the partner credit
+            open_invoices = invoice_obj.search([('partner_id','=',partner.id),('state','in',['open'])])
+            
+            for invoice in open_invoices:
+                amount_total += invoice.residual
+            
             for order in orders:
                 amount_total += order.amount_total
 
