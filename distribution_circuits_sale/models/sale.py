@@ -128,7 +128,13 @@ class Partner(models.Model):
             for invoice in open_invoices:
                 amount_total += invoice.residual
             
+            # only not invoiced lines of orders are not taken into account in customer credit
+            orders = order_obj.search([('partner_id','=',partner.id),('state','in',['sent','sale']),('invoice_status','!=','invoiced')])
+            
             for order in orders:
-                amount_total += order.amount_total
+                for order_line in order.order_line:
+                    if order_line.invoice_status != 'invoced':
+                        amount_total += order_line.price_total
+            
 
             partner.amount_due = amount_total
