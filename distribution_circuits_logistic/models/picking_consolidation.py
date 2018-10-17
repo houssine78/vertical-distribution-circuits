@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
-import addons.decimal_precision as dp
+import odoo.addons.decimal_precision as dp
 
 
 class TimeFrameConsolidation(models.Model):
